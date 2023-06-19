@@ -5,30 +5,15 @@ import re
 import locale
 locale.setlocale(locale.LC_TIME, 'es_ES') # setting a local configuration for dates values
 
+## DATA LOADING AT THE BEGINNING SO THE FUNCTIONS DON'T HAVE TO DO IT EVERY TIME
 df_movies = pd.read_csv("./processed_data/movies.csv")
 df_cast = pd.read_csv("./processed_data/cast.csv")
 df_crew = pd.read_csv("./processed_data/crew.csv")
 actor_financial = pd.read_csv("./processed_data/actor_financial.csv")
 director_financial = pd.read_csv("./processed_data/director_financial.csv")
 
-df_movies["transformed_title"] = [x.lower().strip().replace(" ", "") for x in df_movies["title"]] # with pandas series, we need to use comprehension lists or apply()
-df_movies["transformed_title"] = [unidecode(x) for x in df_movies["transformed_title"]]
-df_movies["transformed_title"] = [re.sub(r'[^\w\s]', '', x) for x in df_movies["transformed_title"]]
-
-actor_financial["transformed_name"] = [x.lower().strip().replace(" ", "") for x in actor_financial["name"]]  # with pandas series, we need to use comprehension lists or apply()
-actor_financial["transformed_name"] = [unidecode(x) for x in actor_financial["transformed_name"]]
-actor_financial["transformed_name"] = [re.sub(r'[^\w\s]', '', x) for x in actor_financial["transformed_name"]] 
-
-director_financial["transformed_name"] = [x.lower().strip().replace(" ", "") for x in director_financial["name"]]  # with pandas series, we need to use comprehension lists or apply()
-director_financial["transformed_name"] = [unidecode(x) for x in director_financial["transformed_name"]]
-director_financial["transformed_name"] = [re.sub(r'[^\w\s]', '', x) for x in director_financial["transformed_name"]]  
-
-df_movies["transformed_director"] = [x.lower().strip().replace(" ", "") for x in df_movies["director"]] # with pandas series, we need to use comprehension lists or apply()
-df_movies["transformed_director"] = [unidecode(x) for x in df_movies["transformed_director"]]
-df_movies["transformed_director"] = [re.sub(r'[^\w\s]', '', x) for x in df_movies["transformed_director"]]
-
 app = FastAPI()
-
+## AMOUNT OF FILMS BY MONTH
 @app.get('/cantidad_filmaciones_mes/{mes}')
 def cantidad_filmaciones_mes(mes: str):
     if type(mes) == str:
@@ -45,7 +30,8 @@ def cantidad_filmaciones_mes(mes: str):
             return "Entered value is not valid."  # needs item() because fastapi doesn't process numpy.int64 type objects
     else:
         return "Entered value is not valid."
-    
+
+## AMOUNT OF FILMS BY DAY    
 @app.get('/cantidad_filmaciones_dia/{dia}')
 def cantidad_filmaciones_dia(dia: str):
     if type(dia) == str:
@@ -63,6 +49,7 @@ def cantidad_filmaciones_dia(dia: str):
     else:
         return "Entered value is not valid."
 
+## POPULARITY OF MOVIES  
 @app.get('/score_titulo/{titulo}')
 def score_titulo(titulo: str):
     if type(titulo) == str:
@@ -72,12 +59,17 @@ def score_titulo(titulo: str):
         df_grouped = df_movies.groupby("transformed_title")["popularity"].sum()
         if titulo in df_grouped.index: # values of the grouped column are the new index in a grouped df
             normal_index = (df_movies["transformed_title"] == titulo).idxmax() # index for non transformed and non grouped values
-            return {"Title": df_movies["title"][normal_index], "Year": df_movies["release_year"][normal_index].item(), "Popularity" : df_grouped[titulo].round(2).item()} 
+            return {
+                    "Title": df_movies["title"][normal_index], 
+                    "Year": df_movies["release_year"][normal_index].item(), 
+                    "Popularity" : df_grouped[titulo].round(2).item()
+                    } 
         else:
             return "Entered value is not valid."
     else:
         return "Entered value is not valid."
-    
+
+## VOTES OF MOVIES    
 @app.get('/votos_titulo/{titulo}')
 def votos_titulo(titulo: str):
     if type(titulo) == str:
@@ -89,14 +81,20 @@ def votos_titulo(titulo: str):
         if titulo in df_grouped_average.index: # values of the grouped column are the new index in a grouped df
              if df_grouped_total[titulo] >= 2000:
                 normal_index = (df_movies["transformed_title"] == titulo).idxmax() # index for non transformed and non grouped values
-                return {"Title": df_movies["title"][normal_index], "Year": df_movies["release_year"][normal_index].item(), "Total Votes" : df_grouped_total[titulo].item(), "Average Vote" : df_grouped_average[titulo].item()}
+                return {
+                        "Title": df_movies["title"][normal_index], 
+                        "Year": df_movies["release_year"][normal_index].item(), 
+                        "Total Votes" : df_grouped_total[titulo].item(), 
+                        "Average Vote" :df_grouped_average[titulo].item()
+                        }
              else:
                  return "Movie must have at least 2000 votes"
         else:
             return "Entered value is not valid."    
     else:
         return "Entered value is not valid."
-    
+
+## FINANCIAL DATA FROM ACTORS    
 @app.get('/get_actor/{nombre_actor}')
 def get_actor(nombre_actor):
     if type(nombre_actor) == str:
@@ -105,11 +103,16 @@ def get_actor(nombre_actor):
         nombre_actor = re.sub(r'[^\w\s]', '', nombre_actor)  # delete special characters and punctuation marks
         if nombre_actor in actor_financial["transformed_name"].unique():
             index = (actor_financial["transformed_name"] == nombre_actor).idxmax()
-            return {'actor':actor_financial["name"][index], 'films':actor_financial["films"][index].item(), 'total return':actor_financial["total_return"][index].round(2).item(), 'average return':actor_financial["average_return"][index].item()}        
+            return {
+                    'actor':actor_financial["name"][index], 'films':actor_financial["films"][index].item(), 
+                    'total_return':actor_financial["total_return"][index].round(2).item(), 
+                    'average_return':actor_financial["average_return"][index].item()
+                    }        
         else:
             return "Entered value is not valid."
     return "Entered value is not valid."
 
+## FINANCIAL DATA FROM DIRECTORS
 @app.get('/get_director/{nombre_director}')
 def get_director(nombre_director):
     if type(nombre_director) == str:
@@ -122,7 +125,7 @@ def get_director(nombre_director):
             movies_director = movies_director[["title","release_year", "return", "budget", "revenue"]]
             return {
                         'director':director_financial["name"][index], 
-                        'total return':director_financial["total_return"][index].item(), 
+                        'total return':director_financial["total_return"][index].round(2).item(), 
                         'films': movies_director.to_dict(orient='records')
                      }
         else:
