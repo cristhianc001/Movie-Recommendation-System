@@ -3,6 +3,12 @@ import pandas as pd
 from unidecode import unidecode
 import re
 import locale
+import os
+
+os.environ["LC_ALL"] = "es_ES."
+os.environ["LANG"] = "es_ES"
+os.environ["LC_TIME"] = "es_ES"
+
 locale.setlocale(locale.LC_TIME, 'es_ES') # setting a local configuration for dates values
 
 ## DATA LOADING AT THE BEGINNING SO THE FUNCTIONS DON'T HAVE TO DO IT EVERY TIME
