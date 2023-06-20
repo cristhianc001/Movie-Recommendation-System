@@ -27,7 +27,7 @@ def cantidad_filmaciones_mes(mes: str):
             count_by_month = df_movies.groupby(["release_month"])["title"].count()
             return {mes: count_by_month[mes].item()}  # needs item() because fastapi doesn't process numpy.int64 type objects
         else:
-            return "Entered value is not valid."  # needs item() because fastapi doesn't process numpy.int64 type objects
+            return "Entered value is not valid."  # print doesn't work here
     else:
         return "Entered value is not valid."
 
@@ -80,10 +80,10 @@ def votos_titulo(titulo: str):
         df_grouped_average = df_movies.groupby("transformed_title")["vote_average"].mean()
         if titulo in df_grouped_average.index: # values of the grouped column are the new index in a grouped df
              if df_grouped_total[titulo] >= 2000:
-                normal_index = (df_movies["transformed_title"] == titulo).idxmax() # index for non transformed and non grouped values
+                normal_index = (df_movies["transformed_title"] == titulo).idxmax() # index for non transformed names and non grouped values
                 return {
                         "Title": df_movies["title"][normal_index], 
-                        "Year": df_movies["release_year"][normal_index].item(), 
+                        "Year": df_movies["release_year"][normal_index].item(), # needs item() because fastapi doesn't process numpy.int64 type objects
                         "Total Votes" : df_grouped_total[titulo].item(), 
                         "Average Vote" :df_grouped_average[titulo].item()
                         }
