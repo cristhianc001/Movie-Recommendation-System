@@ -2,14 +2,6 @@ from fastapi import FastAPI
 import pandas as pd
 from unidecode import unidecode
 import re
-import locale
-import os
-
-os.environ["LC_ALL"] = "es_ES."
-os.environ["LANG"] = "es_ES"
-os.environ["LC_TIME"] = "es_ES"
-
-locale.setlocale(locale.LC_TIME, 'es_ES') # setting a local configuration for dates values
 
 ## DATA LOADING AT THE BEGINNING SO THE FUNCTIONS DON'T HAVE TO DO IT EVERY TIME
 df_movies = pd.read_csv("./processed_data/movies.csv")
@@ -26,9 +18,6 @@ def cantidad_filmaciones_mes(mes: str):
         mes = mes.lower().strip().replace(" ", "")
         mes = unidecode(mes)  # delete accents
         mes = re.sub(r'[^\w\s]', '', mes)  # delete special characters and punctuation marks
-        # '%B' complete name of the month, strftime is string format time, it allows to format date data to a desirable representation
-        # dt only works with pandas series that are datetime type
-        df_movies["release_month"] = pd.to_datetime(df_movies["release_date"]).dt.strftime('%B')
         if mes in df_movies["release_month"].unique():
             count_by_month = df_movies.groupby(["release_month"])["title"].count()
             return {mes: count_by_month[mes].item()}  # needs item() because fastapi doesn't process numpy.int64 type objects
@@ -44,9 +33,6 @@ def cantidad_filmaciones_dia(dia: str):
         dia = dia.lower().strip().replace(" ", "")
         dia = unidecode(dia) # delete accents
         dia = re.sub(r'[^\w\s]', '', dia) # delete special characters and punctuation marks
-        # dt only works with pandas series that are datetime type
-        # '%A' complete name of the day, strftime is string format time, it allows to format date data to a desirable representation
-        df_movies["release_day"] = pd.to_datetime(df_movies["release_date"]).dt.strftime('%A') 
         if dia in df_movies["release_day"].unique():
             count_by_day = df_movies.groupby(["release_day"])["title"].count()
             return {dia:count_by_day[dia].item()}
