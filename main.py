@@ -11,6 +11,12 @@ actor_financial = pd.read_csv("./processed_data/actor_financial.csv")
 director_financial = pd.read_csv("./processed_data/director_financial.csv")
 
 app = FastAPI()
+
+## MAIN PAGE
+@app.get('/')
+def welcome():
+    return "Welcome"
+
 ## AMOUNT OF FILMS BY MONTH
 @app.get('/cantidad_filmaciones_mes/{mes}')
 def cantidad_filmaciones_mes(mes: str):
