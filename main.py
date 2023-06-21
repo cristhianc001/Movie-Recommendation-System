@@ -13,12 +13,12 @@ actor_financial = pd.read_csv("./processed_data/actor_financial.csv")
 director_financial = pd.read_csv("./processed_data/director_financial.csv")
 
 app = FastAPI()
-templates = Jinja2Templates(directory="./templates")
+templates = Jinja2Templates(directory="./templates") # import use custom html templates
 
 ## ROOT
-@app.get('/', response_class=HTMLResponse)
+@app.get('/', response_class=HTMLResponse) # output will be an HTML response
 def welcome(request: Request):
-    return templates.TemplateResponse("root.html", {"request": request})
+    return templates.TemplateResponse("root.html", {"request": request}) # this represent a HTML request
 
 ## AMOUNT OF FILMS BY MONTH
 @app.get('/cantidad_filmaciones_mes/{mes}')
