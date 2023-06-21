@@ -1,4 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 import pandas as pd
 from unidecode import unidecode
 import re
@@ -11,11 +13,12 @@ actor_financial = pd.read_csv("./processed_data/actor_financial.csv")
 director_financial = pd.read_csv("./processed_data/director_financial.csv")
 
 app = FastAPI()
+templates = Jinja2Templates(directory="./templates")
 
-## MAIN PAGE
-@app.get('/')
-def welcome():
-    return "Welcome"
+## ROOT
+@app.get('/', response_class=HTMLResponse)
+def welcome(request: Request):
+    return templates.TemplateResponse("root.html", {"request": request})
 
 ## AMOUNT OF FILMS BY MONTH
 @app.get('/cantidad_filmaciones_mes/{mes}')
