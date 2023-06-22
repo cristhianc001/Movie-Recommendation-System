@@ -7,7 +7,6 @@ import re
 
 ## DATA LOADING AT THE BEGINNING SO THE FUNCTIONS DON'T HAVE TO DO IT EVERY TIME
 df_movies = pd.read_csv("./processed_data/movies.csv")
-df_cast = pd.read_csv("./processed_data/cast.csv")
 df_crew = pd.read_csv("./processed_data/crew.csv")
 actor_financial = pd.read_csv("./processed_data/actor_financial.csv")
 director_financial = pd.read_csv("./processed_data/director_financial.csv")
@@ -121,13 +120,24 @@ def get_director(nombre_director):
         nombre_director = unidecode(nombre_director)  # delete accents
         nombre_director = re.sub(r'[^\w\s]', '', nombre_director)  # delete special characters and punctuation marks
         if nombre_director in director_financial["transformed_name"].unique():
-            index = (director_financial["transformed_name"] == nombre_director).idxmax()
-            movies_director = df_movies[df_movies["transformed_director"] == nombre_director]
-            movies_director = movies_director[["title","release_year", "return", "budget", "revenue"]]
+            index = (director_financial["transformed_name"] == nombre_director).idxmax() # obtain index corresponding the name
+            df_director = df_crew[df_crew["job"] == "Director"] # filter jobs
+            df_movies_director =  df_director[["name", "id"]].merge(df_movies, how="left", on ="id") # join directors name with movies data
+            df_movies_director.fillna("", inplace=True) # replace nan with blank spaces            
+
+            ## transforming the directors name so it can match with the input
+            df_movies_director["transformed_director"] = [x.lower().strip().replace(" ", "") for x in df_movies_director["name"]] # with pandas series, we need to use comprehension lists or apply()
+            df_movies_director["transformed_director"] = [unidecode(x) for x in df_movies_director["transformed_director"]]
+            df_movies_director["transformed_director"] = [re.sub(r'[^\w\s]', '', x) for x in df_movies_director["transformed_director"]]
+
+            ## filter the movies that matches the input name with the transformed name 
+            movies_director = df_movies_director[df_movies_director["transformed_director"] == nombre_director] # only movies from that director
+            movies_director = movies_director[["title","release_year", "return", "budget", "revenue"]] # only columns needed
+            movies_director["release_year"] = [int(x) for x in movies_director["release_year"]] #change years like 1990.0 to 1990            
             return {
                         'director':director_financial["name"][index], 
                         'total return':director_financial["total_return"][index].round(2).item(), 
-                        'films': movies_director.to_dict(orient='records')
+                        'films': movies_director.to_dict(orient='records') # orient=records doesn't show id and objects type
                      }
         else:
             return "Entered value is not valid."
