@@ -31,8 +31,87 @@ The repository is structured as follows:
 - [`notebooks/`](notebooks/): Includes Python notebooks for data cleaning, EDA, visualization and machine learning tasks. 
 - [`img/`](img/): Includes Python figures for data visualization and images used around the repository.
 
-## Considerations
+# TfidfVectorizer vs CountVectorizer
+
+CountVectorizer is used to count the frequency of words in a corpus of documents. Creates a matrix where each row represents a document and each column represents a single word in the corpus. The values ​​in the matrix are the frequencies of the words in each document.
+
+On the other hand, TfidfVectorizer is used to calculate the TF-IDF (Term Frequency-Inverse Document Frequency) value of words in a corpus. In addition to counting the frequency of words in each document, it also takes into account the rarity of words in the entire corpus. This means that words that are common to many documents get a lower TF-IDF value, while words that are more distinctive to a document get a higher TF-IDF value. <br>
+Example:
+
+    Document 1: El perro ladra.
+    Document 2: El gato maulla.
+    Document 3: El perro y el gato juegan.
+
+CountVectorizer
+
+                El   perro   ladra   gato   maulla   y   juegan
+    Document 1   1     1       1       0      0      0     0
+    Document 2   1     0       0       1      1      0     0
+    Document 3   2     1       0       1      0      1     1
+
+
+TfidfVectorizer
+
+                    El   perro   ladra   gato   maulla   y juegan
+    Document 1   0.33    0.47    0.47     0       0     0     0
+    Document 2   0.33      0       0    0.47     0.47   0     0
+    Document 3   0.47    0.33      0    0.33      0    0.33 0.33
+
+# Cosine Similarity
+Cosine similarity is a metric used to determine how similar the documents are irrespective of their size, measures the cosine of the angle between two vectors projected in a multi-dimensional space. In this context, the two vectors I am talking about are arrays containing the word counts of two documents.
+
+$$\text{Cos}(\theta)=\frac{{\mathbf{A} \cdot \mathbf{B}}}{{\|\mathbf{A}\| \cdot \|\mathbf{B}\|}}$$
+
+where A and B are the compared documents in form of vectors and θ is the angle between them. If the angle is zero, the result is 1, which means they are identical documents.<br>
+Example:
+
+```python
+# Define the documents
+doc_trump = "Mr. Trump became president after winning the political election. Though he lost the support of some republican friends, Trump is friends with President Putin"
+
+doc_election = "President Trump says Putin had no political interference is the election outcome. He says it was a witchhunt by political parties. He claimed President Putin is a friend who had nothing to do with the election"
+
+doc_putin = "Post elections, Vladimir Putin became President of Russia. President Putin had served as the Prime Minister earlier in his political career"
+
+documents = [doc_trump, doc_election, doc_putin]
+```
+It's expected that cosine between documents number one and two, which are very similar, is closer to 1 that the cosine between doc two and three.
+
+
+```python
+# Scikit Learn
+from sklearn.feature_extraction.text import CountVectorizer
+import pandas as pd
+
+# Create the Document Term Matrix
+count_vectorizer = CountVectorizer(stop_words='english')
+count_vectorizer = CountVectorizer()
+sparse_matrix = count_vectorizer.fit_transform(documents)
+# OPTIONAL: Convert Sparse Matrix to Pandas Dataframe if you want to see the word frequencies.
+doc_term_matrix = sparse_matrix.todense()
+df = pd.DataFrame(doc_term_matrix, 
+                  columns=count_vectorizer.get_feature_names(), 
+                  index=['doc_trump', 'doc_election', 'doc_putin'])
+```
+
+As expected, the similarity between doc. one and two is higher than the other ones with a value of 0.48927489, meanwhile the cosine between one and three is 0.37139068 and between two and three is 0.38829014.
+
+```python
+# Compute Cosine Similarity
+from sklearn.metrics.pairwise import cosine_similarity
+print(cosine_similarity(df, df))
+#> [[ 1.          0.48927489  0.37139068]
+#>  [ 0.48927489  1.          0.38829014]
+#>  [ 0.37139068  0.38829014  1.        ]]
+
+```
+
+# Considerations
 A subset of the main file had to be used to create the feature and similarity matrices due to lack of computational resources. The amount of memory needed to support a matrix with the entire data was too high for the free plan of Render, so I decided to use a movies dataset filtered by vote count.
+
+## Extra Documentation
+- [Machine Learning 101: CountVectorizer Vs TFIDFVectorizer](https://enjoymachinelearning.com/blog/countvectorizer-vs-tfidfvectorizer/#:~:text=CountVectorizer%20simply%20counts%20the%20number,is%20to%20the%20whole%20corpus.)
+- [Cosine Similarity – Understanding the math and how it works (with python codes)](https://www.machinelearningplus.com/nlp/cosine-similarity/)
 
 ## Contact
 
