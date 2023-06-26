@@ -1,10 +1,12 @@
 # Content-Based Movie Recommendation System
 
-![Word cloud for movie genres](https://raw.githubusercontent.com/cristhianc001/videogame-data-analysis/main/visualizations/gdp-population-scatterplot.png)  
+![Word cloud for movie genres](https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/img/wordcloud.png)  
 *Word cloud for movie genres*
 
 
-This is the implementation of Tf-idf (Term frequency – Inverse document frequency) in the development of a basic content-based movie recommendation system, deployed via FasApi and Render.
+This is the implementation of [Tf-idf](https://es.wikipedia.org/wiki/Tf-idf) (Term frequency – Inverse document frequency) in the development of a basic content-based movie recommendation system, deployed via [FasApi](https://fastapi.tiangolo.com/) and [Render](https://render.com/).
+
+The project consisted in a ETL phase where a dataset of movies, cast and directors had to be cleaned using Python libraries like Pandas, Numpy and AST, an API development stage with the building of seven functions and one of those functions gives a list of recommended movies supported by a similarity matrix  calculated with cosine similarity as metric and [TfidfVectorizer](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html) to fit and transform the training data.
 
 ## Usage
 
@@ -15,7 +17,7 @@ The final result can be see in this Render [link](https://movie-recommendation-s
 - Install the requirements using `pip install -r requirements.txt`
 - Execute the main file with `uvicorn main:app --reload`
 - Open [localhost](http://localhost:8000/) in your browser or the adress that shows up in your terminal like this:
-![Terminal after executing Uvicorn](https://raw.githubusercontent.com/cristhianc001/videogame-data-analysis/main/visualizations/gdp-population-scatterplot.png) 
+![Terminal after executing Uvicorn](https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/img/uvicorn-screenshot.png) 
 
 
 ## Project Structure
@@ -28,6 +30,9 @@ The repository is structured as follows:
 - [`processed_data/`](processed_data/): Contains the transformed and manipulated datasets in CSV format. Also includes extra files that helped in the building of the functions.
 - [`notebooks/`](notebooks/): Includes Python notebooks for data cleaning, EDA, visualization and machine learning tasks. 
 - [`img/`](img/): Includes Python figures for data visualization and images used around the repository.
+
+## Considerations
+A subset of the main file had to be used to create the feature and similarity matrices due to lack of computational resources. The amount of memory needed to support a matrix with the entire data was too high for the free plan of Render, so I decided to use a movies dataset filtered by vote count.
 
 ## Contact
 
