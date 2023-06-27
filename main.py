@@ -7,7 +7,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from unidecode import unidecode
 import re
-from model import df_train, df_crew, actor_financial, director_financial, df_movies
+from data import df_train, df_crew, actor_financial, director_financial, df_movies
 
 app = FastAPI()
 templates = Jinja2Templates(directory="./templates") # import use custom html templates
