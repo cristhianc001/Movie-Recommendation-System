@@ -7,7 +7,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from unidecode import unidecode
 import re
-from data import df_train, df_crew, actor_financial, director_financial, df_movies
+from data import df_train, df_train2, df_crew, actor_financial, director_financial, df_movies
 
 app = FastAPI()
 templates = Jinja2Templates(directory="./templates") # import use custom html templates
@@ -127,6 +127,8 @@ def get_director(nombre_director):
         return "Entered value is not valid."
     
 ## MOVIE RECOMMENDATION
+
+### WITHOUT TruncatedSVD
 @app.get('/recomendacion/{titulo}')
 def get_recommendations(titulo):
     # Crear bag of words
@@ -136,6 +138,32 @@ def get_recommendations(titulo):
     user_movie = titulo
     # Encontrar el índice de la película del usuario
     movie_index = df_train[df_train['title'] == user_movie].index[0]
+
+    # Calcular las similitudes coseno entre la película del usuario y todas las demás películas en la representación LSA
+    similarity_scores = cosine_similarity(tfidf[movie_index].reshape(1, -1), tfidf)
+
+    # Obtener las 10 películas más similares
+    similar_movies = list(enumerate(similarity_scores[0]))
+    sorted_similar_movies = sorted(similar_movies, key=lambda x: x[1], reverse=True)[1:20]
+
+    # Crear el diccionario de películas recomendadas
+    recommendations = {}
+    for i, score in sorted_similar_movies:
+        recommendations[i] = df_train.loc[i, 'title']
+
+    return recommendations
+
+
+### USING TruncatedSVD
+@app.get('/recomendacion2/{titulo}')
+def get_recommendations2(titulo):
+    # Crear bag of words
+    vectorizer = TfidfVectorizer(ngram_range=(1, 2), stop_words="english")
+    tfidf = vectorizer.fit_transform(df_train2['corpus'])
+
+    user_movie = titulo
+    # Encontrar el índice de la película del usuario
+    movie_index = df_train2[df_train2['title'] == user_movie].index[0]
 
     # Aplicar LSA o LSI
     lsa = TruncatedSVD(n_components=100, algorithm='arpack')
