@@ -112,6 +112,8 @@ A subset of the main file had to be used to create the feature and similarity ma
 ## Extra Documentation
 - [Machine Learning 101: CountVectorizer Vs TFIDFVectorizer](https://enjoymachinelearning.com/blog/countvectorizer-vs-tfidfvectorizer/#:~:text=CountVectorizer%20simply%20counts%20the%20number,is%20to%20the%20whole%20corpus.)
 - [Cosine Similarity – Understanding the math and how it works (with python codes)](https://www.machinelearningplus.com/nlp/cosine-similarity/)
+- [Content-Based Movie Recommendation System Using BOW](https://www.youtube.com/watch?v=gtymDEKRr4A)
+- [Step By Step Content-Based Recommendation System](https://medium.com/@prateekgaurav/step-by-step-content-based-recommendation-system-823bbfd0541c)
 
 ## Contact
 

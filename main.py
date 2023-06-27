@@ -2,20 +2,17 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import pandas as pd
+from sklearn.decomposition import TruncatedSVD
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from unidecode import unidecode
 import re
-
-## DATA LOADING AT THE BEGINNING SO THE FUNCTIONS DON'T HAVE TO DO IT EVERY TIME
-df_movies = pd.read_csv("./processed_data/movies.csv")
-df_crew = pd.read_csv("./processed_data/crew.csv")
-actor_financial = pd.read_csv("./processed_data/actor_financial.csv")
-director_financial = pd.read_csv("./processed_data/director_financial.csv")
+from model import df_train, df_crew, actor_financial, director_financial, df_movies
 
 app = FastAPI()
 templates = Jinja2Templates(directory="./templates") # import use custom html templates
 
+## AUX. FUNCTION
 def string_transformation(text):
     if type(text) == str:
         text = text.lower().strip().replace(" ", "")
@@ -132,22 +129,33 @@ def get_director(nombre_director):
 ## MOVIE RECOMMENDATION
 @app.get('/recomendacion/{titulo}')
 def get_recommendations(titulo):
-    
-    df_movies_sample = df_movies[df_movies["vote_count"] >= 100]
-    tfidf = TfidfVectorizer(stop_words="english")
-    combined_features = df_movies_sample['overview'] + " " + df_movies_sample["genres_list"] + " " + df_movies_sample["directors"] + " " + df_movies_sample["collection"]
-    combined_tfidf_matrix = tfidf.fit_transform(combined_features.fillna(""))
-    cosine_sim = cosine_similarity(combined_tfidf_matrix, combined_tfidf_matrix)
+    # Crear bag of words
+    vectorizer = TfidfVectorizer(ngram_range=(1, 2), stop_words="english")
+    tfidf = vectorizer.fit_transform(df_train['corpus'])
 
-    title = string_transformation(titulo)
-    df_movies_sample["transformed_title"] = [string_transformation(x) for x in df_movies_sample["title"]]
-    index = pd.Series(df_movies_sample.index, df_movies_sample["transformed_title"]).drop_duplicates()
-    idx = index[title]
-    sim_scores = enumerate(cosine_sim[idx])
-    sim_scores = sorted(sim_scores,key = lambda x: x[1], reverse=True)
-    sim_scores = sim_scores[1:11]
+    user_movie = titulo
+    # Encontrar el índice de la película del usuario
+    movie_index = df_train[df_train['title'] == user_movie].index[0]
 
-    sim_index = [i[0]for i in sim_scores]
-    return df_movies_sample["title"].iloc[sim_index]
+    # Aplicar LSA o LSI
+    lsa = TruncatedSVD(n_components=100, algorithm='arpack')
+    lsa.fit(tfidf)
+
+    # Transformar la matriz TF-IDF a una representación de menor dimensión
+    tfidf_lsa = lsa.transform(tfidf)
+
+    # Calcular las similitudes coseno entre la película del usuario y todas las demás películas en la representación LSA
+    similarity_scores = cosine_similarity(tfidf_lsa[movie_index].reshape(1, -1), tfidf_lsa)
+
+    # Obtener las 10 películas más similares
+    similar_movies = list(enumerate(similarity_scores[0]))
+    sorted_similar_movies = sorted(similar_movies, key=lambda x: x[1], reverse=True)[1:20]
+
+    # Crear el diccionario de películas recomendadas
+    recommendations = {}
+    for i, score in sorted_similar_movies:
+        recommendations[i] = df_train.loc[i, 'title']
+
+    return recommendations
 
     
