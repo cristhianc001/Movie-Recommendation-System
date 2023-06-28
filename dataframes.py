@@ -20,7 +20,7 @@ actor_financial = pd.read_csv("./processed_data/actor_financial.csv")
 director_financial = pd.read_csv("./processed_data/director_financial.csv")
 
 ## TRANSFORMING STRINGS TO LIST
-df_train = df_movies[df_movies["vote_count"] >= 150].reset_index()
+df_train = df_movies[df_movies["vote_count"] >= 250].reset_index()
 df_train["genres_list"] = [x if pd.isnull(x) else ast.literal_eval(x) for x in df_train["genres_list"]]
 df_train["directors"] = [x if pd.isnull(x) else ast.literal_eval(x) for x in df_train["directors"]]
 df_train["spoken_languages_list"] = [x if pd.isnull(x) else ast.literal_eval(x) for x in df_train["spoken_languages_list"]]
