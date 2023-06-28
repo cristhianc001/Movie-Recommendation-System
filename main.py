@@ -7,8 +7,8 @@ from model import feat_matrix, sim_matrix, get_recommendations
 
 app = FastAPI()
 templates = Jinja2Templates(directory="./templates") # import use custom html templates
-feature_matrix = feat_matrix(df_train["corpus"])
-similarity_matrix = sim_matrix(feature_matrix)
+feature_matrix = None
+similarity_matrix = None
 
 
 ## ROOT
@@ -120,7 +120,14 @@ def get_director(nombre_director):
 ### WITHOUT TruncatedSVD
 @app.get('/recomendacion/{titulo}')
 def recommendations(titulo):
-    recommendations = get_recommendations(titulo, feature_matrix = feature_matrix, similarity_matrix = similarity_matrix)
+    global feature_matrix
+    global similarity_matrix
+
+    if feature_matrix is None or similarity_matrix is None:
+        feature_matrix = feat_matrix(df_train["corpus"])
+        similarity_matrix = sim_matrix(feature_matrix)
+
+    recommendations = get_recommendations(titulo, feature_matrix=feature_matrix, similarity_matrix=similarity_matrix)
     return recommendations
 
 
