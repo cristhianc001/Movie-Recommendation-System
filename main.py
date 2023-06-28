@@ -2,25 +2,14 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import pandas as pd
-from sklearn.decomposition import TruncatedSVD
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import TfidfVectorizer
-from unidecode import unidecode
-import re
-from data import df_train, df_crew, actor_financial, director_financial, df_movies
+from dataframes import df_train, df_crew, actor_financial, director_financial, df_movies, string_transformation
+from model import feat_matrix, sim_matrix, get_recommendations
 
 app = FastAPI()
 templates = Jinja2Templates(directory="./templates") # import use custom html templates
+feature_matrix = feat_matrix(df_train["corpus"])
+similarity_matrix = sim_matrix(feature_matrix)
 
-## AUX. FUNCTION
-def string_transformation(text):
-    if type(text) == str:
-        text = text.lower().strip().replace(" ", "")
-        text = unidecode(text)  # delete accents
-        text = re.sub(r'[^\w\s]', '', text)  # delete special characters and punctuation marks
-        return text
-    else:
-     return "Entered value is not valid." 
 
 ## ROOT
 @app.get('/', response_class=HTMLResponse) # output will be an HTML response
@@ -130,27 +119,8 @@ def get_director(nombre_director):
 
 ### WITHOUT TruncatedSVD
 @app.get('/recomendacion/{titulo}')
-def get_recommendations(titulo):
-    # Crear bag of words
-    vectorizer = TfidfVectorizer(ngram_range=(1, 2), stop_words="english")
-    tfidf = vectorizer.fit_transform(df_train['corpus'])
-
-    user_movie = titulo
-    # Encontrar el índice de la película del usuario
-    movie_index = df_train[df_train['title'] == user_movie].index[0]
-
-    # Calcular las similitudes coseno entre la película del usuario y todas las demás películas en la representación LSA
-    similarity_scores = cosine_similarity(tfidf[movie_index].reshape(1, -1), tfidf)
-
-    # Obtener las 10 películas más similares
-    similar_movies = list(enumerate(similarity_scores[0]))
-    sorted_similar_movies = sorted(similar_movies, key=lambda x: x[1], reverse=True)[1:20]
-
-    # Crear el diccionario de películas recomendadas
-    recommendations = {}
-    for i, score in sorted_similar_movies:
-        recommendations[i] = df_train.loc[i, 'title']
-
+def recommendations(titulo):
+    recommendations = get_recommendations(titulo, feature_matrix = feature_matrix, similarity_matrix = similarity_matrix)
     return recommendations
 
 
