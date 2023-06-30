@@ -6,7 +6,7 @@
 
 This is the implementation of [Tf-idf](https://es.wikipedia.org/wiki/Tf-idf) (Term frequency – Inverse document frequency) in the development of a basic content-based movie recommendation system, deployed via [FasApi](https://fastapi.tiangolo.com/) and [Render](https://render.com/).
 
-The project consisted in a ETL phase where a dataset of movies, cast and directors had to be cleaned using Python libraries like Pandas, Numpy and AST, an API development stage with the building of seven functions and one of those functions gives a list of recommended movies supported by a similarity matrix  calculated with cosine similarity as metric and [TfidfVectorizer](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html) to fit and transform the training data.
+The project consisted in a ETL phase where a dataset of movies, cast and directors had to be cleaned using Python libraries like Pandas, Numpy and AST, an API development stage with the building of seven functions and one of those functions gives a list of recommended movies supported by a similarity matrix and [TfidfVectorizer](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html) to fit and transform the training data.
 
 ## Usage
 
@@ -106,14 +106,26 @@ print(cosine_similarity(df, df))
 
 ```
 
-# Considerations
-A subset of the main file had to be used to create the feature and similarity matrices due to lack of computational resources. The amount of memory needed to support a matrix with the entire data was too high for the free plan of Render, so I decided to use a movies dataset filtered by vote count.
+# Conclusions and Recommendations
+- A subset of the main file had to be used to create the feature and similarity matrices due to lack of computational resources. The amount of memory needed to support a matrix with the entire data was too high for the free plan of Render, so I decided to use a movies dataset filtered by vote count. The results could change if more resources are available.
+- The convertion of the format of the datasets from CSV to another format like parquet could improve the performance of the deployment due to less memory consumption.
+- LSA/LSI is very helpful to obtain better recommendations but needs extra computational resources.
+- The scope of this project only covers TF-IDF vectorizer, but there are other ways to develop a recommendation system, like the K-NN model used [here](https://www.analyticsvidhya.com/blog/2020/08/recommendation-system-k-nearest-neighbors/).
+
+# Tech Summary
+- [Pandas](https://pandas.pydata.org/docs/), [NumPy](https://numpy.org/doc/), [ast](https://docs.python.org/3/library/ast.html) are the libraries and modules used to clean the raw dataset.
+- [FastApi](https://fastapi.tiangolo.com/) is the library used to develop the API.
+- [Scikit-Learn](https://scikit-learn.org/stable/) is the machine-learning library used to do vectorization and matrices calculation.
+- [nltk](https://www.nltk.org/install.html) is the library used to test stemming and lemmatization.
+- [Render](https://render.com/) is the service used to deploy the project.
+- [Visual Studio Code](https://code.visualstudio.com/) is the code editor used for this project. Data Wrangler extension was also helpful.
 
 ## Extra Documentation
 - [Machine Learning 101: CountVectorizer Vs TFIDFVectorizer](https://enjoymachinelearning.com/blog/countvectorizer-vs-tfidfvectorizer/#:~:text=CountVectorizer%20simply%20counts%20the%20number,is%20to%20the%20whole%20corpus.)
 - [Cosine Similarity – Understanding the math and how it works (with python codes)](https://www.machinelearningplus.com/nlp/cosine-similarity/)
 - [Content-Based Movie Recommendation System Using BOW](https://www.youtube.com/watch?v=gtymDEKRr4A)
 - [Step By Step Content-Based Recommendation System](https://medium.com/@prateekgaurav/step-by-step-content-based-recommendation-system-823bbfd0541c)
+- [Stemming vs Lemmatization in NLP: Must-Know Differences](https://www.analyticsvidhya.com/blog/2022/06/stemming-vs-lemmatization-in-nlp-must-know-differences/#:~:text=Stemming%20is%20a%20process%20that,'%20would%20return%20'Car'.)
 
 ## Contact
 

@@ -20,23 +20,32 @@ actor_financial = pd.read_csv("./processed_data/actor_financial.csv")
 director_financial = pd.read_csv("./processed_data/director_financial.csv")
 
 ## TRANSFORMING STRINGS TO LIST
-df_train = df_movies[df_movies["vote_count"] >= 250].reset_index()
-df_train["genres_list"] = [x if pd.isnull(x) else ast.literal_eval(x) for x in df_train["genres_list"]]
-df_train["directors"] = [x if pd.isnull(x) else ast.literal_eval(x) for x in df_train["directors"]]
-df_train["spoken_languages_list"] = [x if pd.isnull(x) else ast.literal_eval(x) for x in df_train["spoken_languages_list"]]
-df_train["production_countries_list"] = [x if pd.isnull(x) else ast.literal_eval(x) for x in df_train["production_countries_list"]]
-df_train["production_companies_list"] = [x if pd.isnull(x) else ast.literal_eval(x) for x in df_train["production_companies_list"]]
+df_movies["genres_list"] = [x if pd.isnull(x) else ast.literal_eval(x) for x in df_movies["genres_list"]]
+df_movies["directors"] = [x if pd.isnull(x) else ast.literal_eval(x) for x in df_movies["directors"]]
+df_movies["spoken_languages_list"] = [x if pd.isnull(x) else ast.literal_eval(x) for x in df_movies["spoken_languages_list"]]
+df_movies["production_countries_list"] = [x if pd.isnull(x) else ast.literal_eval(x) for x in df_movies["production_countries_list"]]
+df_movies["production_companies_list"] = [x if pd.isnull(x) else ast.literal_eval(x) for x in df_movies["production_companies_list"]]
 
 ## EXTRACTING THE ELEMENTS OF THE LISTS
-df_train["genres_list"] = [x if None else ", ".join(x) for x in df_train["genres_list"]]
-df_train["directors"] = [x if None else ", ".join(x) for x in df_train["directors"]]
-df_train["spoken_languages_list"] = [x if None else ", ".join(x) for x in df_train["spoken_languages_list"]]
-df_train["production_countries_list"] = [x if None else ", ".join(x) for x in df_train["production_countries_list"]]
-df_train["production_companies_list"] = [x if None else ", ".join(x) for x in df_train["production_companies_list"]]
+df_movies["genres_list"] = [x if None else ", ".join(x) for x in df_movies["genres_list"]]
+df_movies["directors"] = [x if None else ", ".join(x) for x in df_movies["directors"]]
+df_movies["spoken_languages_list"] = [x if None else ", ".join(x) for x in df_movies["spoken_languages_list"]]
+df_movies["production_countries_list"] = [x if None else ", ".join(x) for x in df_movies["production_countries_list"]]
+df_movies["production_companies_list"] = [x if None else ", ".join(x) for x in df_movies["production_companies_list"]]
 
-## MAKING THE CORPUS OF THE TRAINING DATA
-df_train["corpus"] = df_train["title"].fillna("") + ", " +df_train["genres_list"].fillna("") + ", " + df_train["overview"].fillna("") + ", " + df_train["directors"].fillna("") + ", " + df_train["collection"].fillna("") 
+
+## MAKING THE CORPUS FOR MODEL
+# genres and collection are added twice to give more weight to those attributes
+
+df_movies["corpus"] = (df_movies["title"].fillna("") + ", " + df_movies["genres_list"].fillna("") 
+                    + ", " + df_movies["overview"].fillna("") + ", " + df_movies["directors"].fillna("") + ", " + df_movies["collection"].fillna("") 
+                    + ", " + df_movies["genres_list"].fillna("") + ", " + df_movies["collection"].fillna("") )
+df_movies["corpus"]
 
 ## TRANSFORMING TITLE TO EASE THE SEARCHING
-df_train["transformed_title"] = [string_transformation(x) for x in df_train["title"]]
+df_movies["transformed_title"] = [string_transformation(x) for x in df_movies["title"]]
+
+## DATA FOR FIT
+df_train = df_movies[df_movies["vote_count"] >= 250].reset_index()
+
 
