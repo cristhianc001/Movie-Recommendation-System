@@ -110,7 +110,9 @@ print(cosine_similarity(df, df))
 - There are movies with exact same name and its difficult to deal with them in some of the functions built here. One way to solve this is the concatenation between the title and the release year. Example: The Avengers (2012) and The Avengers (1998).
 - A subset of the main file had to be used to create the feature and similarity matrices due to lack of computational resources. The amount of memory needed to support a matrix with the entire data was too high for the free plan of Render, so I decided to use a movies dataset filtered by vote count. The results could change if more resources are available.
 - The convertion of the format of the datasets from CSV to another format like parquet could improve the performance of the deployment due to less memory consumption.
-- LSA/LSI is very helpful to obtain better recommendations but needs extra computational resources.
+- LSA/LSI is very helpful to obtain better recommendations but needs extra computational resources. It can work with a small dataset, but the recommendations would be poor and the time of execution would be still very high. This an image from the Render console that shows how many minutes passed between the home and the recommendation function.
+![Render Console](https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/img/time-model2.png)  
+*Time of execution on Render console for LSA*
 - The scope of this project only covers TF-IDF vectorizer, but there are other ways to develop a recommendation system, like the K-NN model used [here](https://www.analyticsvidhya.com/blog/2020/08/recommendation-system-k-nearest-neighbors/).
 
 # Tech Summary
