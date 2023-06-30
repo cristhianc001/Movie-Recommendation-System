@@ -3,13 +3,15 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import pandas as pd
 from dataframes import df_train, df_crew, actor_financial, director_financial, df_movies, string_transformation
-from model import feat_matrix, sim_matrix, get_recommendations
+from model import feat_matrix, get_recommendations
 
+## INITIAL VALUES
 app = FastAPI()
 templates = Jinja2Templates(directory="./templates") # import use custom html templates
 feature_matrix = None
-similarity_matrix = None
+tfidf_fit = None
 
+### FUNCTIONS
 
 ## ROOT
 @app.get('/', response_class=HTMLResponse) # output will be an HTML response
@@ -121,13 +123,14 @@ def get_director(nombre_director):
 @app.get('/recomendacion/{titulo}')
 def recommendations(titulo):
     global feature_matrix
-    global similarity_matrix
+    global tfidf_fit
 
-    if feature_matrix is None or similarity_matrix is None:
-        feature_matrix = feat_matrix(df_train["corpus"])
-        similarity_matrix = sim_matrix(feature_matrix)
+    if feature_matrix is None or tfidf_fit is None:
+        parameters = feat_matrix(df_train["corpus"])
+        tfidf_fit = parameters[0]
+        feature_matrix = parameters[1]
 
-    recommendations = get_recommendations(titulo, feature_matrix=feature_matrix, similarity_matrix=similarity_matrix)
+    recommendations = get_recommendations(titulo, tfidf_fit=tfidf_fit, feature_matrix=feature_matrix)
     return recommendations
 
 
