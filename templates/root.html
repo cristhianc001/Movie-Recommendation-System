@@ -5,6 +5,7 @@
         body {
             background-color: black;
             color: white;
+            text-align: center;
         }
 
         h1 {
@@ -19,30 +20,55 @@
         .bullets {
             font-size: 16px;
             margin-bottom: 10px;
+            text-align: center; /* Centrar el contenido */
+        }
+
+        .bullets ul {
+            padding-left: 0;
+            display: inline-block; /* Alinear el contenido a la izquierda */
+            text-align: left; /* Alinear el texto a la izquierda */
+        }
+
+        .bullets li {
+            list-style-type: none;
         }
 
         .signature {
             font-size: 14px;
             margin-top: 20px;
         }
+
+        .centered {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .centered img {
+            width: 200px;
+        }
     </style>
 </head>
 <body>
-    <h1>Movie Recommendation System API</h1>
-    <p class="introduction">This is a personal project involving ETL, FastApi and Machine Learning. 
-        If you want to try these functions with differents inputs, you need to change the default value in the navigation bar of
-        your browser. Example, change "/cantidad_filmaciones_mes/enero" with "/cantidad_filmaciones_mes/febrero" or go to the <a href="/docs"> Swagger User Interface.</a>.
-    </p>
-    <div class="bullets">
-        <ul>
-            <li>Calculate the number of movies given a month in spanish. Try it with <a href="/cantidad_filmaciones_mes/enero">enero</a></li>
-            <li>Calculate the number of movies given a day of the week in spanish. Try it with <a href="/cantidad_filmaciones_dia/viernes"> viernes.</a></li>
-            <li>Obtain the popularity of a movie by entering the title. Try it with <a href="/score_titulo/12angrymen">"12 Angry Men".</a></li>
-            <li>Obtain the number of votes of a movie by entering the title. Try it with<a href="/votos_titulo/toystory">"Toy Story".</a></li>
-            <li>Obtain the total budget, total revenue, and return of the movies given an actor.<a href="/get_actor/johnnydepp">"Johnny Depp".</a></li>
-            <li>Obtain the total budget, total revenue, and return of the movies given a director.<a href="/get_director/michaelbay">"Michael Bay".</a></li>
-            <li>Get movie recommendations. Try it with <a href="/recomendacion/Cars"> Cars.</a></li>
-        </ul>
+    <div class="centered">
+        <h1>Movie Recommendation System API</h1>
+        <p class="introduction">This is a personal project involving ETL, FastApi and Machine Learning. 
+            If you want to try these functions with differents inputs, you need to change the default value in the navigation bar of
+            your browser. Example, change "/cantidad_filmaciones_mes/enero" with "/cantidad_filmaciones_mes/febrero" or go to the <a href="/docs"> Swagger User Interface.</a>.
+        </p>
+        <div class="bullets">
+            <ul>
+                <li>Calculate the number of movies given a month in Spanish. Try it with <a href="/cantidad_filmaciones_mes/enero">enero</a></li>
+                <li>Calculate the number of movies given a day of the week in Spanish. Try it with <a href="/cantidad_filmaciones_dia/viernes"> viernes.</a></li>
+                <li>Obtain the popularity of a movie by entering the title. Try it with <a href="/score_titulo/12angrymen">"12 Angry Men".</a></li>
+                <li>Obtain the number of votes of a movie by entering the title. Try it with<a href="/votos_titulo/toystory">"Toy Story".</a></li>
+                <li>Obtain the total budget, total revenue, and return of the movies given an actor.<a href="/get_actor/johnnydepp">"Johnny Depp".</a></li>
+                <li>Obtain the total budget, total revenue, and return of the movies given a director.<a href="/get_director/michaelbay">"Michael Bay".</a></li>
+                <li>Get movie recommendations. Try it with <a href="/recomendacion/Cars"> Cars.</a></li>
+            </ul>
+        </div>
+        <img src="../img/photo-welcome-page.jpg" alt="Imagen">
     </div>
     <h2>Contact</h2>
     <p class="signature">Made by Cristhian I. Castro</p>
