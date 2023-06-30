@@ -22,14 +22,13 @@ The final result can be seen in this Render [link](https://movie-recommendation-
 
 ## Project Structure
 
-The project is organized as follows:
-
 The repository is structured as follows:
 
-- [`raw_data/`](raw_data/): Contains the pre-processed datasets in CSV format. The file size of the original datasets are high, so in case you want to execute the ETL yourself you should [download](https://drive.google.com/drive/folders/1RN0PqQ4cq9jMhDk1jx4S5OXc3Q5eHpco?usp=sharing) the files and put them inside the project folder. 
+- [`raw_data/`](raw_data/): Contains the pre-processed datasets in CSV format. The file size of the original datasets are high, so in case you want to do the ETL yourself you should [download](https://drive.google.com/drive/folders/1RN0PqQ4cq9jMhDk1jx4S5OXc3Q5eHpco?usp=sharing) this folder and put them inside the project folder. 
 - [`processed_data/`](processed_data/): Contains the transformed and manipulated datasets in CSV format. Also includes extra files that helped in the building of the functions.
 - [`notebooks/`](notebooks/): Includes Python notebooks for data cleaning, EDA, visualization and machine learning tasks. 
 - [`img/`](img/): Includes Python figures for data visualization and images used around the repository.
+- [`templates/`](templates/): HTML file used as a welcome page.
 
 # TfidfVectorizer vs CountVectorizer
 
