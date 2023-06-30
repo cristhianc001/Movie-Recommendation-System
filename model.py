@@ -12,7 +12,7 @@ def feat_matrix(corpus):
 def get_recommendations(title, tfidf_fit, feature_matrix):
     
     title = string_transformation(title)
-    if title in df_movies["transformed_title"].values:
+    if title in df_movies["transformed_title"].unique():
         # vectorization of the corpus of entered movie   
         new_movie_vector = tfidf_fit.transform(df_movies[df_movies["transformed_title"] == title]["corpus"])
 
@@ -26,7 +26,7 @@ def get_recommendations(title, tfidf_fit, feature_matrix):
 
         # if the movie is in the df_train, ignores the first recommendation because it's the same introduced movied.
         # that means that the slicing of the sorted movies should start at postion 1.
-        if title in df_train["transformed_title"].values:
+        if title in df_train["transformed_title"].unique():
 
             # the lambda function sort the list of tuples by the second position x[1]
             sorted_similar_movies = sorted(similar_movies, key=lambda x: x[1], reverse=True)[1:6]

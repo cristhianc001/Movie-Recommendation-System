@@ -10,7 +10,7 @@ The project consisted in a ETL phase where a dataset of movies, cast and directo
 
 ## Usage
 
-The final result can be see in this Render [link](https://movie-recommendation-system-gbft.onrender.com/) but if the server is down, you can run it locally following these steps:
+The final result can be seen in this Render [link](https://movie-recommendation-system-gbft.onrender.com/) but if the server is down, you can run it locally following these steps:
 
 - Open your terminal and clone this repository in a directory of your liking with this code:<br>
 `git clone https://github.com/cristhianc001/movie-recommendation-system`
@@ -107,6 +107,7 @@ print(cosine_similarity(df, df))
 ```
 
 # Conclusions and Recommendations
+- There are movies with exact same name and its difficult to deal with them in some of the functions built here. One way to solve this is the concatenation between the title and the release year. Example: The Avengers (2012) and The Avengers (1998).
 - A subset of the main file had to be used to create the feature and similarity matrices due to lack of computational resources. The amount of memory needed to support a matrix with the entire data was too high for the free plan of Render, so I decided to use a movies dataset filtered by vote count. The results could change if more resources are available.
 - The convertion of the format of the datasets from CSV to another format like parquet could improve the performance of the deployment due to less memory consumption.
 - LSA/LSI is very helpful to obtain better recommendations but needs extra computational resources.
@@ -114,6 +115,7 @@ print(cosine_similarity(df, df))
 
 # Tech Summary
 - [Pandas](https://pandas.pydata.org/docs/), [NumPy](https://numpy.org/doc/), [ast](https://docs.python.org/3/library/ast.html) are the libraries and modules used to clean the raw dataset.
+- [Matplotlib](https://matplotlib.org/stable/index.html), [Seaborn](https://seaborn.pydata.org/), [WordCloud](https://pypi.org/project/wordcloud/) are the libraries used for visualization.
 - [FastApi](https://fastapi.tiangolo.com/) is the library used to develop the API.
 - [Scikit-Learn](https://scikit-learn.org/stable/) is the machine-learning library used to do vectorization and matrices calculation.
 - [nltk](https://www.nltk.org/install.html) is the library used to test stemming and lemmatization.
@@ -121,10 +123,13 @@ print(cosine_similarity(df, df))
 - [Visual Studio Code](https://code.visualstudio.com/) is the code editor used for this project. Data Wrangler extension was also helpful.
 
 ## Extra Documentation
+- [Cosine Similarity and TFIDF](https://medium.com/web-mining-is688-spring-2021/cosine-similarity-and-tfidf-c2a7079e13fa)
+- [Finding Word Similarity using TF-IDF and Cosine in a Term-Context Matrix from Scratch in Python](https://towardsdatascience.com/finding-word-similarity-using-tf-idf-in-a-term-context-matrix-from-scratch-in-python-e423533a407)
 - [Machine Learning 101: CountVectorizer Vs TFIDFVectorizer](https://enjoymachinelearning.com/blog/countvectorizer-vs-tfidfvectorizer/#:~:text=CountVectorizer%20simply%20counts%20the%20number,is%20to%20the%20whole%20corpus.)
 - [Cosine Similarity – Understanding the math and how it works (with python codes)](https://www.machinelearningplus.com/nlp/cosine-similarity/)
 - [Content-Based Movie Recommendation System Using BOW](https://www.youtube.com/watch?v=gtymDEKRr4A)
 - [Step By Step Content-Based Recommendation System](https://medium.com/@prateekgaurav/step-by-step-content-based-recommendation-system-823bbfd0541c)
+- [Latent Semantic Analysis: intuition, math, implementation](https://towardsdatascience.com/latent-semantic-analysis-intuition-math-implementation-a194aff870f8)
 - [Stemming vs Lemmatization in NLP: Must-Know Differences](https://www.analyticsvidhya.com/blog/2022/06/stemming-vs-lemmatization-in-nlp-must-know-differences/#:~:text=Stemming%20is%20a%20process%20that,'%20would%20return%20'Car'.)
 
 ## Contact

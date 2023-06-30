@@ -46,6 +46,7 @@ df_movies["corpus"]
 df_movies["transformed_title"] = [string_transformation(x) for x in df_movies["title"]]
 
 ## DATA FOR FIT
-df_train = df_movies[df_movies["vote_count"] >= 250].reset_index()
+chosen_columns = ["title", "transformed_title", 'genres_list', "directors", "corpus"]
+df_train = df_movies[df_movies["vote_count"] >= 250][chosen_columns].reset_index()
 
 

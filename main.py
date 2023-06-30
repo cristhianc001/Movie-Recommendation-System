@@ -42,7 +42,6 @@ def cantidad_filmaciones_dia(dia: str):
 @app.get('/score_titulo/{titulo}')
 def score_titulo(titulo: str):
     title = string_transformation(titulo)
-    df_movies["transformed_title"] = [string_transformation(x) for x in df_movies["title"]]
     df_grouped = df_movies.groupby("transformed_title")["popularity"].sum()
     if title in df_grouped.index: # values of the grouped column are the new index in a grouped df
         normal_index = (df_movies["transformed_title"] == title).idxmax() # index for non transformed and non grouped values
@@ -58,7 +57,6 @@ def score_titulo(titulo: str):
 @app.get('/votos_titulo/{titulo}')
 def votos_titulo(titulo: str):
     title = string_transformation(titulo)
-    df_movies["transformed_title"] = [string_transformation(x) for x in df_movies["title"]]
     df_grouped_total = df_movies.groupby("transformed_title")["vote_count"].sum()
     df_grouped_average = df_movies.groupby("transformed_title")["vote_average"].mean()
     if title in df_grouped_average.index: # values of the grouped column are the new index in a grouped df
@@ -119,13 +117,13 @@ def get_director(nombre_director):
     
 ## MOVIE RECOMMENDATION
 
-### WITHOUT TruncatedSVD
 @app.get('/recomendacion/{titulo}')
 def recommendations(titulo):
     global feature_matrix
     global tfidf_fit
-
-    if feature_matrix is None or tfidf_fit is None:
+    # setting this variables as global is useful because we only want to calculate this only one time
+    # if this variables are calculated inside this function, they will replace the former values, in this case None
+    if feature_matrix is None or tfidf_fit is None: 
         parameters = feat_matrix(df_train["corpus"])
         tfidf_fit = parameters[0]
         feature_matrix = parameters[1]
