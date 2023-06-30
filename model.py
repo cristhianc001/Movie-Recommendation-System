@@ -36,7 +36,7 @@ def get_recommendations(title, tfidf_fit, feature_matrix):
                 movie_title = df_train['title'][index]
                 genres = df_train['genres_list'][index]
                 director = df_train['directors'][index]
-                similarity_score = score
+                similarity_score = score.round(4)
 
                 recommendation = {
                     'title': movie_title,
@@ -56,7 +56,7 @@ def get_recommendations(title, tfidf_fit, feature_matrix):
                 movie_title = df_train['title'][index]
                 genres = df_train['genres_list'][index]
                 director = df_train['directors'][index]
-                similarity_score = score
+                similarity_score = score.round(4)
 
                 recommendation = {
                     'title': movie_title,

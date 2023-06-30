@@ -135,4 +135,3 @@ print(cosine_similarity(df, df))
 ## Contact
 
  Feel free to contact me here on Github or [LinkedIn](https://www.linkedin.com/in/cristhiancastro/) for any question about the project.
-  
