@@ -19,6 +19,10 @@ df_crew = pd.read_csv("./processed_data/crew.csv")
 actor_financial = pd.read_csv("./processed_data/actor_financial.csv")
 director_financial = pd.read_csv("./processed_data/director_financial.csv")
 
+## LOWERCASE THESE TO GET A MATCH IN THE QUERYS
+df_movies["release_month"] = [x.lower() for x in df_movies["release_month"]]
+df_movies["release_day"] = [x.lower() for x in df_movies["release_day"]]
+
 ## TRANSFORMING STRINGS TO LIST
 df_movies["genres_list"] = [x if pd.isnull(x) else ast.literal_eval(x) for x in df_movies["genres_list"]]
 df_movies["directors"] = [x if pd.isnull(x) else ast.literal_eval(x) for x in df_movies["directors"]]
