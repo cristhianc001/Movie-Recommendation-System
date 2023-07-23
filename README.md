@@ -1,7 +1,7 @@
 # Content Based Movie Recommendation System
-
+<p align="center">
 <img src="https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/img/photo-welcome-page.jpg" height="600">
-
+</p>
 
  Feel free to contact me here on Github or [LinkedIn](https://www.linkedin.com/in/cristhiancastro/) for any question about the project.
 
