@@ -1,6 +1,7 @@
 # Content Based Movie Recommendation System
 
-![Welcome-Page](https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/img/photo-welcome-page.jpg)  
+<img src="https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/img/photo-welcome-page.jpg" height="400">
+
 
  Feel free to contact me here on Github or [LinkedIn](https://www.linkedin.com/in/cristhiancastro/) for any question about the project.
 
@@ -58,7 +59,7 @@ The repository is structured as follows:
 
 Content based recommendation systems uses attributes such as genres, directors, actors, overview, etc., to make suggestions for the users, in other words, only uses variables that belongs to the movie itself. Meanwhile, collaborative based recommendation systems try to match users with same interests. Instead of using the movies metadata, use the reviews and rating of the users. If User A rates the movies X and Y highly, while User B likes movies X and Z, it is likely that movie Z is recommended to user A because user A and B have movie X in common.
 
-![Recommendation Types](https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/img/uvicorn-screenshot.png) 
+![Recommendation Types](https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/img/recommendation-types.png) 
 *Collaborative vs Content based filtering*
 
 
@@ -142,13 +143,16 @@ print(cosine_similarity(df, df))
 
 The project used two .csv files, the first one is a table of more than 45000 rows with movie attributes like id, title, release date, genres, overview, votes, etc., this table contains some columns with nested data.
 
-![Word cloud for movie genres](https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/img/wordcloud.png)  
-*Word cloud for movie genres*
+<p align="center">
+  <img src="https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/img/raw-example.png" alt="Nested Columns" /> 
+</p>
+
+*Column Spoken Languages in movies dataframe*
 
 The second table exclusively contains nested information of actors and directors. The columns of both dataframes were treated with the library AST and comprehension lists. Other transformation were applied to the tables like dropping duplicates and non-needed columns, checking for null values, among others.
 
-![Word cloud for movie genres](https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/img/wordcloud.png)  
-*Word cloud for movie genres*
+![Nested Columns](https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/img/raw-example2.png)  
+*Credits dataframe before processing*
 
 ### [B. Functions and API development](notebooks/2.%20API%20functions.ipynb)
 
@@ -156,16 +160,16 @@ After the data wrangling, the functions that will execute the querys in the API 
 
 ### [C. Exploratory Data Analysis](notebooks/3.%20Exploratory%20Data%20Analysis.ipynb)
 
-An EDA was conducted to observe the trend of the  variables, the distribution, outliers, etc. These are some examples:
+An EDA was conducted to observe the trend of the variables of the movies dataframe, the distribution and outliers were also analyzed. These are some examples:
 
-![Word cloud for movie genres](https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/img/wordcloud.png)  
-*Word cloud for movie genres*
+![Barplot release date](https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/visualizations/barplot-date.png)  
+*Films by release date*
 
-![Word cloud for movie genres](https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/img/wordcloud.png)  
-*Word cloud for movie genres*
+![Genres and Language](https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/visualizations/barplot-genres.png)  
+*Films by genre and language*
 
-![Word cloud for movie genres](https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/img/wordcloud.png)  
-*Word cloud for movie genres*
+![Distribution](https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/visualizations/distribution.png)  
+*Distribution of votes, average vote and popularity*
 
 This analysis also was helpful because the unrealiability of the financial data of the movies (budget, revenue, return) was discovered, so these attributes were discarded for the model.
 
@@ -173,8 +177,8 @@ This analysis also was helpful because the unrealiability of the financial data 
 
 The recommendation model was developed using the library Scikit-Learn, the TfidVectorizer module and the attributes overview, title, collection, genres and directors as corpus of the experiment. Some iterations were performed that included stemming, lemmatization and dimension reduction, discarding these because they reach the memory consumption limit. The final model was then put into the main.py file for the purpose of being consumed in the API.
 
-![Word cloud for movie genres](https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/img/wordcloud.png)  
-*Word cloud for movie genres*
+![Recommended movies for Arrival](https://raw.githubusercontent.com/cristhianc001/movie-recommendation-system/main/img/recommendation-arrival.png)  
+*Recommended movies for Arrival*
 
 ## 6. Results and Recommendations
 - There are movies with exact same name and its difficult to deal with them in some of the functions built here. One way to solve this is the concatenation between the title and the release year. Example: The Avengers (2012) and The Avengers (1998).
